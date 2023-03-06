@@ -41,6 +41,14 @@ public class SimpleChatServerHandler extends SimpleChannelInboundHandler<String>
         // A closed Channel is automatically removed from ChannelGroup,
         // so there is no need to do "channels.remove(ctx.channel());"
     }
+
+	/**
+	 * 当从服务端读到客户端写入信息时，将信息转发给其他客户端的 Channel
+	 * 其中如果你使用的是 Netty 5.x 版本时，需要把 channelRead0() 重命名为messageReceived()
+	 * @param ctx
+	 * @param s
+	 * @throws Exception
+	 */
     @Override
 	protected void channelRead0(ChannelHandlerContext ctx, String s) throws Exception { // (4)
 		Channel incoming = ctx.channel();
@@ -52,13 +60,14 @@ public class SimpleChatServerHandler extends SimpleChannelInboundHandler<String>
             }
         }
 	}
-  
+  	//服务端监听到客户端活动
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception { // (5)
         Channel incoming = ctx.channel();
 		System.out.println("SimpleChatClient:"+incoming.remoteAddress()+"在线");
 	}
-	
+
+	//服务端监听到客户端不活动
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception { // (6)
         Channel incoming = ctx.channel();
